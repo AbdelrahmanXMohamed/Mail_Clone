@@ -4,6 +4,8 @@
 <html lang="en">
   <head>
     <title>{% block title %}Mail{% endblock %}</title>
+    {% block script %} {% endblock %}
+
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -14,6 +16,5 @@
   </head>
   <body>
     <div class="container">{% block body %} {% endblock %}</div>
-    {% block script %} {% endblock %}
   </body>
 </html>

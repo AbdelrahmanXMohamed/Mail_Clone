@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
   console.log("loaded")
 
@@ -9,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // By default, load the inbox
   load_mailbox('inbox');
+  get_allmails();
 });
 
 function compose_email() {
@@ -22,9 +24,8 @@ function compose_email() {
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
 
-  document.querySelector("#compose-form").onsubmit = ()
-    => {
-    fetch("/email", {
+  document.querySelector("#compose-form").onsubmit = function () {
+    fetch("/emails", {
       method: "POST",
       body:
         JSON.stringify({
@@ -32,13 +33,22 @@ function compose_email() {
           "subject": document.querySelector("#compose-subject").value,
           "body": document.querySelector("#compose-body").value,
         })
-    }).then(response => response.json()).then(data => {
+    }).then(response => response.json()).then(function (data) {
       console.log(data)
       load_mailbox('sent');
     });
     return false;
   }
     ;
+
+}
+
+
+
+
+function get_allmails() {
+  fetch(`/emails/sent`).then(response =>
+    response.json()).then(data => console.log(data))
 
 }
 
@@ -50,4 +60,10 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+
+
+
+
+
+
 }
