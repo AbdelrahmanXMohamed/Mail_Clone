@@ -87,7 +87,8 @@ function load_mailbox(mailbox) {
           comp.innerHTML += `<li class="list-group-item" style="${mail.read ? "color:grey;background: rgba(0,0,0,0.08)" : ""}" >
           <strong  onclick="load_email(${mail.id})">${mail.sender}</strong>
           ${mail.subject}
-          <span style="float:right">         
+          <span style="margin-left: 40%;
+white-space: nowrap;">         
           ${mail.timestamp}
           <button class="btn btn-sm btn-outline-primary" onclick="archive(${mail.id})" id="archive">Archive</button>
           </span></li>`
@@ -96,7 +97,8 @@ function load_mailbox(mailbox) {
           comp.innerHTML += `<li class="list-group-item" style="${mail.read ? "color:grey;background: rgba(0,0,0,0.08)" : ""}" >
           <strong  onclick="load_email(${mail.id})">${mail.sender}</strong>
           ${mail.subject}
-          <span style="float:right">         
+          <span style="margin-left: 40%;
+white-space: nowrap;">         
           ${mail.timestamp}
           <button class="btn btn-sm btn-outline-danger" id="unarchive"  onclick="archive(${mail.id})" >Unarchive</button>
           </span></li>`
@@ -105,8 +107,7 @@ function load_mailbox(mailbox) {
           comp.innerHTML += `<li class="list-group-item" >
           <strong onclick="load_email(${mail.id})">${mail.recipients[0]}</strong>
            <span onclick="load_email(${mail.id})">${mail.subject}</span>
-          <span style="float:right">
-          <button class="btn btn-out"
+          <span style="margin-left: 50%;">
           ${mail.timestamp}
           </span></li>`}
       }
@@ -139,7 +140,7 @@ function load_email(e) {
       <p><strong>Timestamp:</strong>${email.timestamp}</p>
       <button class="btn btn-sm btn-outline-primary" id="reply">Relay</button>
       <hr/>
-      <p>${email.body}</p>
+      <p>${email.body.replace("\n", "<br>")}</p>
       `
       document.querySelector("#emails-view").appendChild(comp)
       document.querySelector("#reply").addEventListener("click",
@@ -177,9 +178,15 @@ function relay(email) {
   document.querySelector("#emails-view").innerHTML = '';
   compose_email();
   // Relay
+  var dummy = email.body.slice(email.body.lastIndexOf("\n") + 1);
+  console.log(dummy)
   document.querySelector('#compose-recipients').value = email.sender;
   document.querySelector('#compose-subject').value = email.subject.slice(0, 3) === 'Re:' ? `${email.subject}` : `Re: ${email.subject}`;
-  document.querySelector('#compose-body').value = `On ${email.timestamp} ${email.sender} wrote: ${email.body} `
+  document.querySelector('#compose-body').value =
+    email.subject.slice(0, 3) === 'Re:' ?
+      `${email.body.slice(0, email.body.lastIndexOf("\n") + 1)}On ${email.timestamp} ${email.sender} wrote: ${dummy}\n`
+      :
+      `On ${email.timestamp} ${email.sender} wrote: ${email.body}\n`
 
 
 }
